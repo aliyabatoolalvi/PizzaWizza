@@ -59,4 +59,6 @@ dependencies {
     //room sql database for persistence
     implementation(libs.room.runtime)
     annotationProcessor(libs.room.compiler)
+
+    implementation(libs.picasso)
 }

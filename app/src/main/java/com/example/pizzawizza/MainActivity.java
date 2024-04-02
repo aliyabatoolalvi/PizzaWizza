@@ -36,7 +36,9 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new NoteItemAdapter(this, data);
         recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
 
         refresh();
