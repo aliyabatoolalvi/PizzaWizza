@@ -40,7 +40,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         Picasso.get().load("http://192.168.137.1/FoodOrdering/images/"+product.getPicture()).placeholder(R.drawable.welcome_pizza_img).into(binding.productImage);
 
         binding.back.setOnClickListener(v -> {
-            finish();
+            onBackPressed();
         });
 
     }

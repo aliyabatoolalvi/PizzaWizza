@@ -1,6 +1,7 @@
 package com.example.pizzawizza.adapter;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Pair;
@@ -49,9 +50,10 @@ public class NoteItemAdapter extends RecyclerView.Adapter<NoteItemViewHolder> {
         holder.binding.getRoot().setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductDetailsActivity.class);
             intent.putExtra("id",product.getId());
-            ActivityOptionsCompat options = ActivityOptionsCompat
-                    .makeSceneTransitionAnimation((Activity) context, holder.binding.image, "image")
-                    ;
+            Pair<View,String> p1 = Pair.create(holder.binding.image, "image");
+            Pair<View,String> p2 = Pair.create(holder.binding.title, "title");
+            Pair<View,String> p3 = Pair.create(holder.binding.price, "price");
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, p1,p2,p3);
             context.startActivity(intent, options.toBundle());
 
         });
