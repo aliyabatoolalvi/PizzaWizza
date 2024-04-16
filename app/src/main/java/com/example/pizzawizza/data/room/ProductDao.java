@@ -15,10 +15,13 @@ import java.util.List;
 
 @Dao
 public interface ProductDao {
-    @Query("SELECT * FROM Product")
+    @Query("SELECT * FROM Product order by category")
     List<Product> getAll();
     @Query("SELECT * FROM Product limit 500")
     LiveData<List<Product>> liveGetAll();
+
+    @Query("SELECT * FROM Product where id=:productId")
+    Product getProductById(int productId);
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertOrReplace(Product Product);
