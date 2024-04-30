@@ -1,17 +1,14 @@
 package com.example.pizzawizza;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.pizzawizza.adapter.NoteItemAdapter;
+import com.example.pizzawizza.adapter.ProductAdapter;
 import com.example.pizzawizza.data.Product;
 import com.example.pizzawizza.data.room.AppDatabase;
 import com.example.pizzawizza.retrofit.APIClient;
@@ -26,7 +23,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
-    NoteItemAdapter adapter;
+    ProductAdapter adapter;
     List<Product> data = new ArrayList<>();
 
     @Override
@@ -34,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        adapter = new NoteItemAdapter(this, data);
+        adapter = new ProductAdapter(this, data);
         recyclerView = findViewById(R.id.recyclerView);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -42,6 +39,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         refresh();
+
+        findViewById(R.id.cartFab).setOnClickListener(v -> {
+            startActivity(new Intent(this,CartActivity.class));
+            overridePendingTransition( R.anim.up, R.anim.stay );
+        });
 
         APIInterface apiInterface = APIClient.getClient().create(APIInterface.class);
         Call<List<Product>> call1 = apiInterface.loadProducts();
@@ -64,6 +66,10 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<List<Product>> call, Throwable t) {
                 Toast.makeText(MainActivity.this, "Error: "+t.getMessage(), Toast.LENGTH_SHORT).show();
             }
+        });
+
+        AppDatabase.getDatabase(this).cartItemDao().liveGetCount().observe(this,integer -> {
+            refresh();
         });
 
     }

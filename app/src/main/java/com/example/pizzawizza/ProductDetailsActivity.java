@@ -1,6 +1,7 @@
 package com.example.pizzawizza;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -9,6 +10,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.pizzawizza.data.CartItem;
 import com.example.pizzawizza.data.Product;
 import com.example.pizzawizza.data.room.AppDatabase;
 import com.example.pizzawizza.databinding.ActivityProductDetailsBinding;
@@ -16,32 +18,79 @@ import com.squareup.picasso.Picasso;
 
 public class ProductDetailsActivity extends AppCompatActivity {
     Product product;
+    CartItem cartItem;
+    AppDatabase appDatabase;
     ActivityProductDetailsBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding=ActivityProductDetailsBinding.inflate(getLayoutInflater());
+        binding = ActivityProductDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        int id=getIntent().getIntExtra("id",-1);
-        product= AppDatabase.getDatabase(this).productDao().getProductById(id);
-        if(product==null){
-            Toast.makeText(this,"No product found", Toast.LENGTH_SHORT).show();
+        int id = getIntent().getIntExtra("id", -1);
+        appDatabase = AppDatabase.getDatabase(this);
+        product = appDatabase.productDao().getProductById(id);
+        if (product == null) {
+            Toast.makeText(this, "No product found", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
+        binding.addCart.setOnClickListener(v -> {
+            cartItem = new CartItem();
+            cartItem.setProductId(product.getId());
+            cartItem.setQuantity(1);
+            appDatabase.cartItemDao().insertOrReplace(cartItem);
+            refreshCart();
+        });
+
         refresh();
     }
 
-    public void refresh(){
+    public void refresh() {
         binding.productName.setText(product.getName());
         binding.productDetails.setText(product.getDetails());
-        binding.productPrice.setText(product.getPrice()+" Rs.");
-        Picasso.get().load("http://192.168.137.1/FoodOrdering/images/"+product.getPicture()).placeholder(R.drawable.welcome_pizza_img).into(binding.productImage);
+        binding.productPrice.setText(product.getPrice() + " Rs.");
+        Picasso.get().load("http://192.168.137.1/FoodOrdering/images/" + product.getPicture()).placeholder(R.drawable.welcome_pizza_img).into(binding.productImage);
 
         binding.back.setOnClickListener(v -> {
             onBackPressed();
         });
 
+        binding.plus.setOnClickListener(v -> {
+            cartItem.setQuantity(cartItem.getQuantity() + 1);
+            appDatabase.cartItemDao().insertOrReplace(cartItem);
+            refreshCart();
+        });
+
+        binding.minus.setOnClickListener(v -> {
+            cartItem.setQuantity(cartItem.getQuantity() - 1);
+            if (cartItem.getQuantity() <= 0)
+                appDatabase.cartItemDao().delete(cartItem);
+            else
+                appDatabase.cartItemDao().insertOrReplace(cartItem);
+            refreshCart();
+        });
+
+        refreshCart();
+
+    }
+
+    public void refreshCart() {
+        cartItem = appDatabase.cartItemDao().getByProductId(product.getId());
+        if (cartItem == null) {
+            binding.addCart.setVisibility(View.VISIBLE);
+            binding.plus.setVisibility(View.INVISIBLE);
+            binding.minus.setVisibility(View.INVISIBLE);
+            binding.quantity.setVisibility(View.INVISIBLE);
+        } else {
+            binding.addCart.setVisibility(View.INVISIBLE);
+            binding.plus.setVisibility(View.VISIBLE);
+            binding.minus.setVisibility(View.VISIBLE);
+            binding.quantity.setVisibility(View.VISIBLE);
+            binding.quantity.setText(cartItem.getQuantity() + "");
+        }
+
+        binding.cartCount.setText(appDatabase.cartItemDao().getCount()+"");
     }
 }

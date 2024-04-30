@@ -6,12 +6,14 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.example.pizzawizza.data.CartItem;
 import com.example.pizzawizza.data.Product;
 
-@Database(entities = {Product.class}, version = 1)
+@Database(entities = {Product.class, CartItem.class}, version = 1)
 //@TypeConverters(value = {MyTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract ProductDao productDao();
+    public abstract CartItemDao cartItemDao();
     private static volatile AppDatabase INSTANCE;
     
     public static AppDatabase getDatabase(final Context context) {
@@ -19,7 +21,7 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context,
-                            AppDatabase.class, "database_v2")
+                            AppDatabase.class, "database_v3")
                             .fallbackToDestructiveMigration()
                             .fallbackToDestructiveMigrationOnDowngrade()
                             .allowMainThreadQueries()

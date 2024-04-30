@@ -16,6 +16,9 @@
         android:theme="@style/Theme.PizzaWizza"
         tools:targetApi="31">
         <activity
+            android:name=".CartActivity"
+            android:exported="false" />
+        <activity
             android:name=".ProductDetailsActivity"
             android:exported="false" />
         <activity
