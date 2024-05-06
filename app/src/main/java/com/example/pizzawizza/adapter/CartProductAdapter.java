@@ -20,6 +20,7 @@ import com.example.pizzawizza.data.room.AppDatabase;
 import com.example.pizzawizza.data.room.CartProduct;
 import com.example.pizzawizza.databinding.ItemCartProductBinding;
 import com.example.pizzawizza.databinding.ItemProductBinding;
+import com.example.pizzawizza.retrofit.APIClient;
 import com.example.pizzawizza.viewHolders.CartProductViewHolder;
 import com.squareup.picasso.Picasso;
 
@@ -48,7 +49,7 @@ public class CartProductAdapter extends RecyclerView.Adapter<CartProductViewHold
         holder.binding.title.setText(cartProduct.product.getName());
         holder.binding.details.setText(cartProduct.product.getShortDescription());
         holder.binding.price.setText(cartProduct.product.getPrice()+" RS");
-        Picasso.get().load("http://192.168.137.1/FoodOrdering/images/"+cartProduct.product.getPicture()).placeholder(R.drawable.welcome_pizza_img).into(holder.binding.image);
+        Picasso.get().load(APIClient.BASE_URL_IMAGES+cartProduct.product.getPicture()).placeholder(R.drawable.welcome_pizza_img).into(holder.binding.image);
         holder.binding.quantity.setText(cartProduct.cartItem.getQuantity()+"");
 
         holder.binding.getRoot().setOnClickListener(v -> {

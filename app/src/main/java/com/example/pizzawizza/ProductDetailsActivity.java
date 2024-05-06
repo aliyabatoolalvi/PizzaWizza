@@ -14,6 +14,7 @@ import com.example.pizzawizza.data.CartItem;
 import com.example.pizzawizza.data.Product;
 import com.example.pizzawizza.data.room.AppDatabase;
 import com.example.pizzawizza.databinding.ActivityProductDetailsBinding;
+import com.example.pizzawizza.retrofit.APIClient;
 import com.squareup.picasso.Picasso;
 
 public class ProductDetailsActivity extends AppCompatActivity {
@@ -51,7 +52,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         binding.productName.setText(product.getName());
         binding.productDetails.setText(product.getDetails());
         binding.productPrice.setText(product.getPrice() + " Rs.");
-        Picasso.get().load("http://192.168.137.1/FoodOrdering/images/" + product.getPicture()).placeholder(R.drawable.welcome_pizza_img).into(binding.productImage);
+        Picasso.get().load(APIClient.BASE_URL_IMAGES + product.getPicture()).placeholder(R.drawable.welcome_pizza_img).into(binding.productImage);
 
         binding.back.setOnClickListener(v -> {
             onBackPressed();

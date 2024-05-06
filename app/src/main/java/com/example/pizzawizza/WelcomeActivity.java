@@ -9,6 +9,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.pizzawizza.data.User;
+import com.example.pizzawizza.data.room.AppDatabase;
 import com.example.pizzawizza.databinding.ActivityWelcomeBinding;
 
 public class WelcomeActivity extends AppCompatActivity {
@@ -19,6 +21,12 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding=ActivityWelcomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        User user= AppDatabase.getDatabase(this).userDao().getUser();
+        if (user!=null){
+            startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+            finish();
+        }
 
         binding.register.setOnClickListener(v -> {
             startActivity(new Intent(WelcomeActivity.this, SignupActivity.class));
