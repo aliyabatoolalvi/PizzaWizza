@@ -1,5 +1,6 @@
 package com.example.pizzawizza.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.pizzawizza.AddProductActivity;
 import com.example.pizzawizza.MainActivity;
 import com.example.pizzawizza.R;
 import com.example.pizzawizza.adapter.ProductAdapter;
@@ -33,6 +35,7 @@ public class HomeFragment extends Fragment {
     ProductAdapter adapter;
     List<Product> data = new ArrayList<>();
     FragmentHomeBinding binding;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -56,7 +59,7 @@ public class HomeFragment extends Fragment {
         call1.enqueue(new Callback<List<Product>>() {
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
-                if (getContext()==null) return;
+                if (getContext() == null) return;
                 if (response.code() == 200) {
                     List<Product> products = response.body();
                     AppDatabase.getDatabase(getContext()).productDao().deleteAll();
@@ -79,8 +82,19 @@ public class HomeFragment extends Fragment {
         AppDatabase.getDatabase(getContext()).cartItemDao().liveGetCount().observe(getActivity(), integer -> {
             refresh();
         });
+        AppDatabase.getDatabase(getContext()).productDao().liveGetCount().observe(getActivity(), integer -> {
+            if (getContext() != null)
+                refresh();
+        });
 
         refresh();
+
+//        if (!AppDatabase.getDatabase(getContext()).userDao().getUser().getType().equals("Admin"))
+//            binding.floatingActionButton.setVisibility(View.GONE);
+
+        binding.floatingActionButton.setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), AddProductActivity.class));
+        });
     }
 
     public void refresh() {

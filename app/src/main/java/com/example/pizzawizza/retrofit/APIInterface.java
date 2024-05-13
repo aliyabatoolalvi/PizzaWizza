@@ -20,6 +20,10 @@ public interface APIInterface {
     Call<List<Product>> loadProducts();
 
     @FormUrlEncoded
+    @POST("saveOrUpdateProduct.php")
+    Call<Product> saveOrUpdateProduct(@FieldMap Map<String, String> items);
+
+    @FormUrlEncoded
     @POST("signUp.php")
     Call<User> signUp(@FieldMap Map<String, String> items,@Header(value = "Password") String password);
 

@@ -1,5 +1,6 @@
 package com.example.pizzawizza;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import com.example.pizzawizza.data.Product;
 import com.example.pizzawizza.data.room.AppDatabase;
 import com.example.pizzawizza.databinding.ActivityProductDetailsBinding;
 import com.example.pizzawizza.retrofit.APIClient;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 public class ProductDetailsActivity extends AppCompatActivity {
@@ -46,6 +48,15 @@ public class ProductDetailsActivity extends AppCompatActivity {
         });
 
         refresh();
+
+        appDatabase.productDao().getProductByIdLive(product.getId()).observe(this,product1 -> {
+            if (product1!=null) product=product1;
+            refresh();
+        });
+
+        binding.floatingActionButton.setOnClickListener(v -> {
+            startActivity(new Intent(this, AddProductActivity.class).putExtra("data",new Gson().toJson(product)));
+        });
     }
 
     public void refresh() {

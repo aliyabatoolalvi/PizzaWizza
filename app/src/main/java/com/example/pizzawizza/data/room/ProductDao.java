@@ -22,6 +22,8 @@ public interface ProductDao {
 
     @Query("SELECT * FROM Product where id=:productId")
     Product getProductById(int productId);
+    @Query("SELECT * FROM Product where id=:productId")
+    LiveData<Product> getProductByIdLive(int productId);
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertOrReplace(Product Product);
@@ -38,4 +40,6 @@ public interface ProductDao {
     @Query("DELETE FROM Product")
     void deleteAll();
 
+    @Query("SELECT count(*) FROM Product limit 500")
+    LiveData<Integer> liveGetCount();
 }
