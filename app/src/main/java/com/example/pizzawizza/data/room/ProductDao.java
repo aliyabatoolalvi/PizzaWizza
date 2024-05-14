@@ -17,26 +17,31 @@ import java.util.List;
 public interface ProductDao {
     @Query("SELECT * FROM Product order by category")
     List<Product> getAll();
+
     @Query("SELECT * FROM Product limit 500")
     LiveData<List<Product>> liveGetAll();
 
     @Query("SELECT * FROM Product where id=:productId")
     Product getProductById(int productId);
+
     @Query("SELECT * FROM Product where id=:productId")
     LiveData<Product> getProductByIdLive(int productId);
-    
+
+    @Query("SELECT distinct(subCategory) FROM Product")
+    List<String> getAllSubCats();
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertOrReplace(Product Product);
-    
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertOrReplaceAll(List<Product> Products);
-    
+
     @Delete
     void delete(Product blogPost);
-    
+
     @Update
     void update(Product blogPost);
-    
+
     @Query("DELETE FROM Product")
     void deleteAll();
 

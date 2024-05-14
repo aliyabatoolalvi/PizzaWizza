@@ -151,7 +151,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/category"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/textinput_bg"
                 android:gravity="center"
@@ -163,21 +163,22 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textView2">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/categorySpinner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
                     android:drawablePadding="10dp"
+                    android:entries="@array/categories"
                     android:inputType="textCapSentences"
                     android:paddingLeft="12dp"
                     android:paddingTop="0dp">
 
-                </com.google.android.material.textfield.TextInputEditText>
+                </androidx.appcompat.widget.AppCompatSpinner>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/sub_category"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/textinput_bg"
                 android:gravity="center"
@@ -189,16 +190,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textView2">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    android:id="@+id/sub_category_autocomplete"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
+                    android:completionThreshold="0"
                     android:drawablePadding="10dp"
                     android:inputType="textCapSentences"
                     android:paddingLeft="12dp"
                     android:paddingTop="0dp">
 
-                </com.google.android.material.textfield.TextInputEditText>
+                </androidx.appcompat.widget.AppCompatAutoCompleteTextView>
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button

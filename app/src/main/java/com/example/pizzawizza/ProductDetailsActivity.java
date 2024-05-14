@@ -49,13 +49,16 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         refresh();
 
-        appDatabase.productDao().getProductByIdLive(product.getId()).observe(this,product1 -> {
-            if (product1!=null) product=product1;
+        appDatabase.productDao().getProductByIdLive(product.getId()).observe(this, product1 -> {
+            if (product1 != null) product = product1;
             refresh();
         });
 
+//        if (!AppDatabase.getDatabase(this).userDao().getUser().getType().equals("Admin"))
+//            binding.floatingActionButton.setVisibility(View.GONE);
+
         binding.floatingActionButton.setOnClickListener(v -> {
-            startActivity(new Intent(this, AddProductActivity.class).putExtra("data",new Gson().toJson(product)));
+            startActivity(new Intent(this, AddProductActivity.class).putExtra("data", new Gson().toJson(product)));
         });
     }
 
@@ -103,6 +106,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
             binding.quantity.setText(cartItem.getQuantity() + "");
         }
 
-        binding.cartCount.setText(appDatabase.cartItemDao().getCount()+"");
+        binding.cartCount.setText(appDatabase.cartItemDao().getCount() + "");
     }
 }

@@ -3,6 +3,7 @@ package com.example.pizzawizza;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -23,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -48,18 +50,35 @@ public class AddProductActivity extends AppCompatActivity {
             binding.description.getEditText().setText(product.getDetails());
             binding.price.getEditText().setText(product.getPrice()+"");
             binding.discountPrice.getEditText().setText(product.getDiscountedPrice()+"");
-            binding.category.getEditText().setText(product.getCategory());
-            binding.subCategory.getEditText().setText(product.getSubCategory());
+            String[] cats = getResources().getStringArray(R.array.categories);
+            for (int i = 0; i < cats.length; i++) {
+                if (cats[i].equals(product.getCategory())) {
+                    binding.categorySpinner.setSelection(i);
+                    break;
+                }
+            }
+            binding.subCategoryAutocomplete.setText(product.getSubCategory());
         }
 
+        List<String> subCats=AppDatabase.getDatabase(this).productDao().getAllSubCats();
+        ArrayAdapter<String> suggestionsAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, subCats);
+        binding.subCategoryAutocomplete.setAdapter(suggestionsAdapter);
+
         binding.saveBtn.setOnClickListener(v -> {
+
+            if (binding.categorySpinner.getSelectedItemPosition()==0){
+                Toast.makeText(this, "Select category", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             product.setName(binding.productName.getEditText().getText().toString());
             product.setDetails(binding.description.getEditText().getText().toString());
             product.setShortDescription(binding.shortDetails.getEditText().getText().toString());
             product.setPrice(Integer.parseInt(binding.price.getEditText().getText().toString()));
             product.setDiscountedPrice(Integer.parseInt(binding.discountPrice.getEditText().getText().toString()));
-            product.setCategory(binding.category.getEditText().getText().toString());
-            product.setSubCategory(binding.subCategory.getEditText().getText().toString());
+            product.setCategory(binding.categorySpinner.getSelectedItem().toString());
+            product.setSubCategory(binding.subCategoryAutocomplete.getText().toString());
 
             if (!isForEdit) product.setId(-1);
 
